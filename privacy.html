@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - KuloWallet</title>
+    <style>
+        :root {
+            --bg-body: #0f172a; 
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981; 
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        /* Lang Switcher */
+        .lang-switch {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            display: flex;
+            gap: 10px;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 2px 5px;
+        }
+        .lang-btn.active {
+            color: #fff;
+            text-decoration: underline;
+            text-decoration-color: var(--accent);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+            display: block;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p, ul {
+            margin-bottom: 15px;
+            color: #cbd5e1;
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .content-section {
+            display: none; /* Hidden by default, JS enables one */
+        }
+        .content-section.active {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-actions">
+            <a href="index.html" class="back-btn" id="btn-back">← Back to Home</a>
+            
+            <div class="lang-switch">
+                <button class="lang-btn active" id="btn-id" onclick="setLang('id')">ID</button>
+                <span style="color:#64748b">|</span>
+                <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+            </div>
+        </div>
+
+        <div id="content-id" class="content-section active">
+            <h1>Kebijakan Privasi</h1>
+            <span class="last-updated">Terakhir diperbarui: 26 November 2025</span>
+
+            <p>Selamat datang di KuloWallet. Kami menghargai privasi Anda dan berkomitmen untuk melindungi data pribadi serta data keuangan Anda. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan aplikasi mobile KuloWallet.</p>
+
+            <h2>1. Informasi yang Kami Kumpulkan</h2>
+            <p>Agar aplikasi dapat berfungsi dengan baik (seperti fitur Cloud Sync dan Laporan), kami mengumpulkan jenis informasi berikut:</p>
+            <ul>
+                <li><strong>Informasi Akun:</strong> Alamat email (wajib untuk login dan sinkronisasi data antar perangkat).</li>
+                <li><strong>Data Keuangan:</strong> Data transaksi, kategori pengeluaran, dan anggaran yang Anda masukkan secara manual ke dalam aplikasi.</li>
+                <li><strong>Data Perangkat:</strong> Informasi model perangkat dan versi sistem operasi untuk keperluan perbaikan bug (debugging) dan peningkatan performa.</li>
+            </ul>
+
+            <h2>2. Bagaimana Kami Menggunakan Informasi Anda</h2>
+            <p>Kami menggunakan data tersebut semata-mata untuk:</p>
+            <ul>
+                <li>Menyimpan dan mensinkronisasi catatan keuangan Anda ke Cloud Server kami yang aman.</li>
+                <li>Menghasilkan analisis keuangan (seperti fitur <em>Survival Time Metric</em> dan <em>Early Warning System</em>).</li>
+                <li>Membuat laporan (PDF) sesuai permintaan Anda.</li>
+                <li>Mengirimkan kode OTP atau notifikasi penting terkait akun (via layanan pihak ketiga seperti MailerSend).</li>
+            </ul>
+            <p><strong>Penting:</strong> Kami tidak menjual, menyewakan, atau membagikan data keuangan pribadi Anda kepada pihak ketiga untuk tujuan pemasaran (iklan).</p>
+
+            <h2>3. Keamanan Data</h2>
+            <p>Keamanan adalah prioritas utama kami. Kami menerapkan langkah-langkah teknis yang ketat:</p>
+            <ul>
+                <li>Semua komunikasi data antara aplikasi dan server dienkripsi menggunakan protokol SSL/TLS.</li>
+                <li>Penyimpanan data sensitif di perangkat dilindungi menggunakan standar keamanan mobile terkini.</li>
+                <li>Akses ke database server dibatasi hanya untuk pemeliharaan sistem.</li>
+            </ul>
+
+            <h2>4. Layanan Pihak Ketiga</h2>
+            <p>Aplikasi ini mungkin menggunakan layanan pihak ketiga untuk operasional teknis:</p>
+            <ul>
+                <li><strong>Cloudflare:</strong> Untuk keamanan jaringan dan DNS.</li>
+                <li><strong>MailerSend/Email Provider:</strong> Untuk pengiriman email verifikasi/OTP.</li>
+            </ul>
+
+            <h2>5. Hak Pengguna & Penghapusan Data</h2>
+            <p>Sesuai kebijakan Google Play Store, Anda memiliki hak penuh atas data Anda. Jika Anda ingin berhenti menggunakan KuloWallet dan ingin data Anda dihapus permanen dari server kami:</p>
+            <ul>
+                <li>Anda dapat melakukan "Hapus Akun" langsung dari menu Pengaturan di dalam aplikasi.</li>
+                <li>Atau, Anda dapat menghubungi kami melalui email di bawah ini untuk permohonan penghapusan manual.</li>
+            </ul>
+            <p>Setelah akun dihapus, seluruh data transaksi dan riwayat keuangan akan dimusnahkan secara permanen dan tidak dapat dikembalikan.</p>
+
+            <h2>6. Hubungi Kami</h2>
+            <p>Jika Anda memiliki pertanyaan mengenai privasi atau keamanan data di KuloWallet, silakan hubungi tim developer kami di:</p>
+            <p><strong>Email:</strong> support@kulowallet.com</p>
+        </div>
+
+        <div id="content-en" class="content-section">
+            <h1>Privacy Policy</h1>
+            <span class="last-updated">Last updated: November 26, 2025</span>
+
+            <p>Welcome to KuloWallet. We value your privacy and are committed to protecting your personal and financial data. This Privacy Policy explains how we collect, use, and protect your information when using the KuloWallet mobile application.</p>
+
+            <h2>1. Information We Collect</h2>
+            <p>To ensure the app functions properly (such as Cloud Sync and Reporting features), we collect the following types of information:</p>
+            <ul>
+                <li><strong>Account Information:</strong> Email address (required for login and data synchronization across devices).</li>
+                <li><strong>Financial Data:</strong> Transaction data, expense categories, and budgets that you manually enter into the app.</li>
+                <li><strong>Device Data:</strong> Device model information and operating system version for debugging and performance improvement purposes.</li>
+            </ul>
+
+            <h2>2. How We Use Your Information</h2>
+            <p>We use this data solely to:</p>
+            <ul>
+                <li>Store and synchronize your financial records to our secure Cloud Server.</li>
+                <li>Generate financial analysis (such as <em>Survival Time Metric</em> and <em>Early Warning System</em> features).</li>
+                <li>Create reports (PDF) upon your request.</li>
+                <li>Send OTP codes or important account-related notifications (via third-party services like MailerSend).</li>
+            </ul>
+            <p><strong>Important:</strong> We do not sell, rent, or share your personal financial data with third parties for marketing (advertising) purposes.</p>
+
+            <h2>3. Data Security</h2>
+            <p>Security is our top priority. We implement strict technical measures:</p>
+            <ul>
+                <li>All data communication between the app and the server is encrypted using SSL/TLS protocols.</li>
+                <li>Sensitive data storage on the device is protected using the latest mobile security standards.</li>
+                <li>Access to the server database is restricted to system maintenance only.</li>
+            </ul>
+
+            <h2>4. Third-Party Services</h2>
+            <p>This app may use third-party services for technical operations:</p>
+            <ul>
+                <li><strong>Cloudflare:</strong> For network security and DNS.</li>
+                <li><strong>MailerSend/Email Provider:</strong> For sending verification emails/OTP.</li>
+            </ul>
+
+            <h2>5. User Rights & Data Deletion</h2>
+            <p>In accordance with Google Play Store policies, you have full rights over your data. If you wish to stop using KuloWallet and want your data permanently deleted from our servers:</p>
+            <ul>
+                <li>You can perform "Delete Account" directly from the Settings menu within the app.</li>
+                <li>Or, you can contact us via the email below for a manual deletion request.</li>
+            </ul>
+            <p>Once the account is deleted, all transaction data and financial history will be permanently destroyed and cannot be recovered.</p>
+
+            <h2>6. Contact Us</h2>
+            <p>If you have questions regarding privacy or data security at KuloWallet, please contact our developer team at:</p>
+            <p><strong>Email:</strong> support@kulowallet.com</p>
+        </div>
+
+    </div>
+
+    <script>
+        function setLang(lang) {
+            // Update Buttons
+            document.getElementById('btn-id').className = lang === 'id' ? 'lang-btn active' : 'lang-btn';
+            document.getElementById('btn-en').className = lang === 'en' ? 'lang-btn active' : 'lang-btn';
+
+            // Show/Hide Content Sections
+            document.getElementById('content-id').className = lang === 'id' ? 'content-section active' : 'content-section';
+            document.getElementById('content-en').className = lang === 'en' ? 'content-section active' : 'content-section';
+
+            // Update Back Button Text
+            const backBtn = document.getElementById('btn-back');
+            backBtn.innerHTML = lang === 'id' ? '← Kembali ke Beranda' : '← Back to Home';
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KuloWallet - Cerdas Mengelola, Tenang Menjalani</title>
+    <meta name="description" content="Aplikasi keuangan dengan Kulo Smart Engine. Hitung arus kas, export PDF laporan, dan prediksi ketahanan finansial.">
+    <style>
+        :root {
+            --bg-body: #0f172a; 
+            --bg-chat: #1e293b; 
+            --bubble-user: #2563eb; 
+            --bubble-ai: #334155; 
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981; 
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        /* --- LANGUAGE SWITCHER --- */
+        .lang-switch-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .lang-switch {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            display: flex;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 2px 5px;
+            transition: color 0.3s;
+        }
+
+        .lang-btn.active {
+            color: #fff;
+            text-decoration: underline;
+            text-decoration-color: var(--accent);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 80px 0 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #ffffff; 
+            line-height: 1.2;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .text-highlight {
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .subheadline {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 40px;
+        }
+
+        /* App Buttons */
+        .app-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+
+        .btn-download {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            color: #000;
+            padding: 12px 25px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn-download:hover { transform: translateY(-3px); }
+        
+        .btn-disabled {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            border: 1px solid #334155;
+        }
+        
+        .btn-disabled:hover { transform: none; }
+
+        /* --- CHAT INTERFACE --- */
+        .chat-section { margin-bottom: 80px; }
+
+        .phone-mockup {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--bg-chat);
+            border-radius: 20px;
+            border: 1px solid #334155;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            height: 750px;
+        }
+
+        .chat-header {
+            background: #0f172a;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #334155;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .avatar {
+            width: 45px; height: 45px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .chat-info h3 { font-size: 1rem; margin: 0; }
+        .chat-info span { font-size: 0.8rem; color: var(--accent); }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-image: radial-gradient(#334155 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            position: relative;
+            line-height: 1.5;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.ai {
+            background-color: var(--bubble-ai);
+            color: #fff;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .message.user {
+            background-color: var(--bubble-user);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            background: #0f172a;
+            border-top: 1px solid #334155;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .quick-replies {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .reply-chip {
+            background: transparent;
+            border: 1px solid #475569;
+            color: #e2e8f0;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1 1 auto;
+            text-align: center;
+            min-width: 130px;
+        }
+
+        .reply-chip.highlight {
+            border-color: var(--warning);
+            color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .reply-chip:hover {
+            background: var(--bubble-user);
+            border-color: var(--bubble-user);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .typing-indicator {
+            align-self: flex-start;
+            background-color: var(--bubble-ai);
+            padding: 10px 15px;
+            border-radius: 20px;
+            display: none;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 8px; height: 8px; background: #94a3b8; border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+        /* --- FEATURES GRID --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .feature-card {
+            background: var(--bg-chat);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .icon { font-size: 2rem; margin-bottom: 15px; display: inline-block; }
+        .f-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; color: #fff; }
+        .f-desc { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* --- TRUST SECTION --- */
+        .trust-section {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            margin-bottom: 60px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid #334155;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; margin: 0 10px; font-size: 0.85rem; }
+        .footer-links a:hover { color: var(--accent); }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .reply-chip { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="lang-switch-container">
+            <div class="lang-switch">
+                <button class="lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
+                <span style="color:#64748b">|</span>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+            </div>
+        </div>
+
+        <header class="hero">
+            <h1 data-i18n="hero_title">Bukan Sekadar Mencatat.<br>Ini <span class="text-highlight">Kulo Smart Engine.</span></h1>
+            <p class="subheadline" data-i18n="hero_sub">Hitung nafas keuanganmu, atur strategi masa depan, dan dapatkan laporan PDF lengkap. Data aman di Cloud, bisa diakses kapanpun.</p>
+            
+            <div class="app-buttons">
+                <a href="#" class="btn-download">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0225 3.503c-1.4352-.657-3.1385-1.0432-4.9667-1.0432-1.8021 0-3.4866.3776-4.9126 1.0182l-2.0076-3.4779a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9723 3.416c-4.228 2.1587-4.4828 7.0393-4.4984 7.2797h19.3556c-.0156-.3072-.2966-5.0906-4.478-7.2366"/></svg>
+                    Download Android
+                </a>
+                <a href="#" class="btn-download btn-disabled" onclick="return false;">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.96 1.07-3.11-1.05.05-2.31.74-3.03 1.59-.67.79-1.25 2.05-1.09 3.2 1.17.09 2.35-.84 3.05-1.68z"/></svg>
+                    <span data-i18n="btn_ios">iOS (Coming Soon)</span>
+                </a>
+            </div>
+        </header>
+
+        <section class="chat-section">
+            <div class="phone-mockup">
+                <div class="chat-header">
+                    <div class="avatar">🧠</div>
+                    <div class="chat-info">
+                        <h3 data-i18n="chat_title">Kulo Smart Assistant</h3>
+                        <span data-i18n="chat_status">Menjawab pertanyaan fitur & keamanan</span>
+                    </div>
+                </div>
+
+                <div class="chat-body" id="chat-body">
+                    </div>
+
+                <div class="chat-input-area">
+                    <div class="quick-replies" id="quick-replies">
+                        </div>
+                </div>
+            </div>
+        </section>
+
+        <h2 style="text-align:center; margin-bottom:10px;" data-i18n="feature_head">Fitur Kelas Berat</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">📈</div>
+                <div class="f-title" data-i18n="f1_t">Survival Time Metric</div>
+                <div class="f-desc" data-i18n="f1_d">Fitur unik yang menghitung berapa lama kamu bisa bertahan hidup tanpa pemasukan berdasarkan sisa uang dan pola pengeluaranmu.</div>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📄</div>
+                <div class="f-title" data-i18n="f2_t">Laporan Siap Cetak</div>
+                <div class="f-desc" data-i18n="f2_d">Butuh data buat pajak atau arsip? Export ke PDF dengan rapi. Bisa Harian, Bulanan, atau per Kuartal (3 bulan).</div>
+            </div>
+            <div class="feature-card">
+                <div class="icon">⚠️</div>
+                <div class="f-title" data-i18n="f3_t">Early Warning System</div>
+                <div class="f-desc" data-i18n="f3_d">Kulo Smart Engine akan "memarahi" (memberi peringatan) jika kamu terdeteksi boros atau melenceng dari budget yang sudah diset.</div>
+            </div>
+            <div class="feature-card">
+                <div class="icon">☁️</div>
+                <div class="f-title" data-i18n="f4_t">Cloud Sync</div>
+                <div class="f-desc" data-i18n="f4_d">Data tersimpan di Cloud. Ganti HP 10 kali pun, data 5 tahun lalu tetap bisa dilihat kembali saat login.</div>
+            </div>
+        </div>
+
+        <section class="trust-section">
+            <h2 style="text-align: center; margin-bottom: 30px; color:#fff;">Experience & Expertise</h2>
+            <div style="max-width: 800px; margin: 0 auto; text-align: left;">
+                <p style="color:var(--text-muted); text-align:center; margin-bottom:30px;" data-i18n="trust_intro">
+                    Aplikasi ini adalah hasil pengalaman panjang Founder dalam menangani data sensitif dan bervolume tinggi.
+                </p>
+                
+                <div style="background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; border: 1px solid #334155;">
+                    <div style="margin-bottom: 15px; display:flex; gap:15px; align-items:start;">
+                        <span style="font-size:1.5rem;">🏦</span>
+                        <div>
+                            <strong style="color:var(--text-main); font-size:1.1rem;" data-i18n="trust_title_1">Bank Reporting Specialist</strong>
+                            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:5px;" data-i18n="trust_desc_1">
+                                Berpengalaman membangun aplikasi pelaporan Bank untuk dikirim ke Regulator Nasional (BI, OJK, PPATK). Kami mengerti betapa krusialnya akurasi data.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px; display:flex; gap:15px; align-items:start;">
+                        <span style="font-size:1.5rem;">💾</span>
+                        <div>
+                            <strong style="color:var(--text-main); font-size:1.1rem;" data-i18n="trust_title_2">Big Data Expertise</strong>
+                            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:5px;" data-i18n="trust_desc_2">
+                                Pernah menangani proyek Big Data di Lembaga Penjamin Simpanan (LPS). KuloWallet didesain untuk menangani ribuan transaksi tanpa lemot.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:15px; align-items:start;">
+                        <span style="font-size:1.5rem;">📱</span>
+                        <div>
+                            <strong style="color:var(--text-main); font-size:1.1rem;" data-i18n="trust_title_3">Teknologi Modern</strong>
+                            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:5px;" data-i18n="trust_desc_3">
+                                Dibangun dengan teknologi mobile modern (React Native) yang stabil, dengan sistem keamanan terenkripsi.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-links">
+                <a href="privacy.html" data-i18n="link_privacy">Kebijakan Privasi</a>
+                <a href="#" data-i18n="link_terms">Syarat & Ketentuan</a>
+            </div>
+            <p>&copy; 2025 KuloWallet.com. Your Personal Finance Guardian.</p>
+            <p style="margin-top:10px; font-size:0.8rem; color: #64748b;" data-i18n="footer_quote">
+                "Jangan biarkan uangmu menguap tanpa jejak."
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // --- DATA TRANSLATION ---
+        const i18n = {
+            id: {
+                hero_title: 'Bukan Sekadar Mencatat.<br>Ini <span class="text-highlight">Kulo Smart Engine.</span>',
+                hero_sub: 'Hitung nafas keuanganmu, atur strategi masa depan, dan dapatkan laporan PDF lengkap. Data aman di Cloud, bisa diakses kapanpun.',
+                btn_ios: 'iOS (Segera)',
+                chat_title: 'Kulo Smart Assistant',
+                chat_status: 'Menjawab pertanyaan fitur & keamanan',
+                chat_welcome: 'Halo! 👋 Ada masalah keuangan apa yang bikin kamu pusing hari ini? KuloWallet punya solusinya.',
+                
+                feature_head: 'Fitur Kelas Berat',
+                f1_t: 'Survival Time Metric',
+                f1_d: 'Fitur unik yang menghitung berapa lama kamu bisa bertahan hidup tanpa pemasukan berdasarkan sisa uang dan pola pengeluaranmu.',
+                f2_t: 'Laporan Siap Cetak',
+                f2_d: 'Butuh data buat pajak atau arsip? Export ke PDF dengan rapi. Bisa Harian, Bulanan, atau per Kuartal (3 bulan).',
+                f3_t: 'Early Warning System',
+                f3_d: 'Kulo Smart Engine akan "memarahi" (memberi peringatan) jika kamu terdeteksi boros atau melenceng dari budget yang sudah diset.',
+                f4_t: 'Cloud Sync',
+                f4_d: 'Data tersimpan di Cloud. Ganti HP 10 kali pun, data 5 tahun lalu tetap bisa dilihat kembali saat login.',
+
+                trust_intro: 'Aplikasi ini adalah hasil pengalaman panjang Founder dalam menangani data sensitif dan bervolume tinggi.',
+                trust_title_1: 'Bank Reporting Specialist',
+                trust_desc_1: 'Berpengalaman membangun aplikasi pelaporan Bank untuk dikirim ke Regulator Nasional (BI, OJK, PPATK). Kami mengerti betapa krusialnya akurasi data.',
+                trust_title_2: 'Big Data Expertise',
+                trust_desc_2: 'Pernah menangani proyek Big Data di Lembaga Penjamin Simpanan (LPS). KuloWallet didesain untuk menangani ribuan transaksi tanpa lemot.',
+                trust_title_3: 'Teknologi Modern',
+                trust_desc_3: 'Dibangun dengan teknologi mobile modern (React Native) yang stabil, dengan sistem keamanan terenkripsi.',
+
+                link_privacy: 'Kebijakan Privasi',
+                link_terms: 'Syarat & Ketentuan',
+                footer_quote: '"Jangan biarkan uangmu menguap tanpa jejak."'
+            },
+            en: {
+                hero_title: 'More Than Just Tracking.<br>This is <span class="text-highlight">Kulo Smart Engine.</span>',
+                hero_sub: 'Calculate your financial runway, plan your future, and get complete PDF reports. Data is safe in the Cloud, accessible anytime.',
+                btn_ios: 'iOS (Coming Soon)',
+                chat_title: 'Kulo Smart Assistant',
+                chat_status: 'Answering feature & security questions',
+                chat_welcome: 'Hi! 👋 What financial headache do you have today? KuloWallet has the solution.',
+                
+                feature_head: 'Heavyweight Features',
+                f1_t: 'Survival Time Metric',
+                f1_d: 'A unique feature calculating how long you can survive without income based on remaining funds and spending habits.',
+                f2_t: 'Print-Ready Reports',
+                f2_d: 'Need data for taxes or archives? Export to PDF neatly. Daily, Monthly, or Quarterly (3 months).',
+                f3_t: 'Early Warning System',
+                f3_d: 'Kulo Smart Engine will "scold" you (send alerts) if you are detected overspending or deviating from your budget.',
+                f4_t: 'Cloud Sync',
+                f4_d: 'Data stored in the Cloud. Change phones 10 times, your 5-year-old data is still retrievable upon login.',
+
+                trust_intro: 'This app is the result of the Founder\'s extensive experience in handling sensitive and high-volume data.',
+                trust_title_1: 'Bank Reporting Specialist',
+                trust_desc_1: 'Experienced in building Bank reporting apps for National Regulators (BI, OJK, PPATK). We understand how crucial data accuracy is.',
+                trust_title_2: 'Big Data Expertise',
+                trust_desc_2: 'Handled Big Data projects at the Indonesia Deposit Insurance Corporation (LPS). KuloWallet is designed to handle thousands of transactions without lag.',
+                trust_title_3: 'Modern Technology',
+                trust_desc_3: 'Built with stable modern mobile technology (React Native), with encrypted security systems.',
+
+                link_privacy: 'Privacy Policy',
+                link_terms: 'Terms & Conditions',
+                footer_quote: '"Don\'t let your money evaporate without a trace."'
+            }
+        };
+
+        // --- CHAT DATA (Bilingual) ---
+        const chatData = {
+            id: {
+                buttons: [
+                    { id: 'lazy', text: '😴 Jujur, saya malas catat', highlight: true },
+                    { id: 'broke', text: '📉 Uang cepat habis', highlight: true },
+                    { id: 'smart', text: '🤖 Apa itu Kulo Smart?' },
+                    { id: 'report', text: '📄 Bisa export laporan?' },
+                    { id: 'cloud', text: '☁️ Ganti HP data hilang?' },
+                    { id: 'safety', text: '🔒 Yakin data aman?' },
+                    { id: 'dev', text: '👨‍💻 Siapa developernya?' },
+                    { id: 'price', text: '💰 Gratis atau bayar?' }
+                ],
+                q: {
+                    lazy: "Jujur, saya malas catat. Ribet kalau harus ketik terus.",
+                    broke: "Uang cepat habis. Gaji numpang lewat doang.",
+                    smart: "Apa itu Kulo Smart? Canggihnya dimana?",
+                    report: "Aku butuh laporan buat arsip, bisa export PDF?",
+                    cloud: "Kalau ganti HP, data catatanku hilang gak?",
+                    safety: "Yakin data keuanganku aman?",
+                    dev: "Siapa sih yang bikin aplikasi ini?",
+                    price: "Bayar gak sih?"
+                },
+                a: {
+                    lazy: "Tenang, aku paham banget. 🤝 Makanya KuloWallet didesain super simpel: Buka > Isi Angka > Simpan. Cuma 3 detik! Gak perlu isi kategori yang ribet kalau lagi buru-buru.",
+                    broke: "Seringkali uang habis karena 'kebocoran halus' (pengeluaran kecil yang sering). 📉 Kulo Smart Engine bakal kasih tau kamu di mana kebocoran terbesarmu, biar kamu bisa 'nambal' dompet dan gaji bisa napas lebih panjang!",
+                    smart: "Kulo Smart Engine adalah otak dari aplikasi ini. 🧠 Dia bisa kasih nasihat keuangan kalau kamu mulai boros, kasih peringatan sebelum budget jebol, dan menghitung 'Nafas Keuangan' (berapa lama kamu bertahan hidup tanpa pemasukan). Canggih kan?",
+                    report: "Tentu bisa! 📄 Kamu bisa export data transaksi ke PDF dengan rapi. Mau laporan Harian, Bulanan, atau 3 Bulan terakhir untuk evaluasi? Sekali klik langsung jadi.",
+                    cloud: "Aman! Data kamu disimpan di Cloud (Server). ☁️ Jadi walaupun HP kamu hilang, rusak, atau ganti baru, tinggal login lagi pakai email, data bertahun-tahun lalu tetap ada.",
+                    safety: "Sangat aman. 🔒 Kami menggunakan enkripsi standar industri yang ada di teknologi React Native. Developer kami terbiasa menangani data sensitif perbankan, jadi keamanan privasi user adalah prioritas nomor satu.",
+                    dev: "Aplikasi ini dibuat oleh Big Data Engineer yang punya pengalaman spesifik: Membangun aplikasi pelaporan Bank untuk regulator (seperti BI, OJK, PPATK) dan proyek Big Data di LPS. Jadi ini bukan aplikasi 'asal jadi'.",
+                    price: "Kamu bisa mulai GRATIS! 🎉 Fitur dasar sudah sangat powerful. Nanti akan ada fitur premium untuk power-user, tapi versi gratis pun sudah didesain tanpa iklan yang mengganggu."
+                }
+            },
+            en: {
+                buttons: [
+                    { id: 'lazy', text: '😴 Honestly, too lazy to track', highlight: true },
+                    { id: 'broke', text: '📉 Money runs out fast', highlight: true },
+                    { id: 'smart', text: '🤖 What is Kulo Smart?' },
+                    { id: 'report', text: '📄 Can I export reports?' },
+                    { id: 'cloud', text: '☁️ If I change phone?' },
+                    { id: 'safety', text: '🔒 Is data safe?' },
+                    { id: 'dev', text: '👨‍💻 Who is the developer?' },
+                    { id: 'price', text: '💰 Free or Paid?' }
+                ],
+                q: {
+                    lazy: "Honestly, I'm too lazy to track. It's a hassle to type everything.",
+                    broke: "Money runs out fast. Salary just passes through.",
+                    smart: "What is Kulo Smart? How advanced is it?",
+                    report: "I need reports for archives, can I export PDF?",
+                    cloud: "If I change my phone, is my data lost?",
+                    safety: "Are you sure my financial data is safe?",
+                    dev: "Who made this app?",
+                    price: "Do I have to pay?"
+                },
+                a: {
+                    lazy: "Relax, I totally get it. 🤝 That's why KuloWallet is designed to be super simple: Open > Enter Number > Save. Just 3 seconds! No need for complex categories if you're in a rush.",
+                    broke: "Often money runs out due to 'silent leaks' (frequent small expenses). 📉 Kulo Smart Engine will tell you where your biggest leaks are, so you can patch your wallet and make your salary last longer!",
+                    smart: "Kulo Smart Engine is the brain of this app. 🧠 It can give financial advice if you start overspending, warn you before the budget breaks, and calculate 'Financial Runway' (how long you survive without income). Cool right?",
+                    report: "Absolutely! 📄 You can export transaction data to PDF neatly. Daily, Monthly, or Quarterly reports for evaluation? Just one click.",
+                    cloud: "Safe! Your data is stored in the Cloud (Server). ☁️ So even if your phone is lost, broken, or changed, just log in again with your email, and years of data will still be there.",
+                    safety: "Very safe. 🔒 We use industry-standard encryption found in React Native technology. Our developer is used to handling sensitive banking data, so user privacy security is priority number one.",
+                    dev: "This app is made by a Big Data Engineer with specific experience: Building Bank reporting apps for regulators (like BI, OJK, PPATK) and Big Data projects at LPS. So this is not just a random app.",
+                    price: "You can start for FREE! 🎉 The basic features are already very powerful. Later there will be premium features for power-users, but the free version is designed without annoying ads."
+                }
+            }
+        };
+
+        let currentLang = 'id';
+        let isReplying = false;
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            // 1. Update Buttons State
+            document.getElementById('btn-id').className = lang === 'id' ? 'lang-btn active' : 'lang-btn';
+            document.getElementById('btn-en').className = lang === 'en' ? 'lang-btn active' : 'lang-btn';
+
+            // 2. Update Static Text Elements
+            const texts = i18n[lang];
+            // Cari semua element yang punya attribut data-i18n
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (texts[key]) {
+                    el.innerHTML = texts[key];
+                }
+            });
+
+            // 3. Reset Chat
+            resetChat();
+        }
+
+        function resetChat() {
+            const chatBody = document.getElementById('chat-body');
+            const quickReplies = document.getElementById('quick-replies');
+            const welcomeText = i18n[currentLang].chat_welcome;
+            const typingHtml = `<div class="typing-indicator" id="typing-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+
+            // Reset Body
+            chatBody.innerHTML = `<div class="message ai">${welcomeText}</div>${typingHtml}`;
+
+            // Reset Buttons
+            const buttons = chatData[currentLang].buttons;
+            let btnsHtml = '';
+            buttons.forEach(btn => {
+                const highlightClass = btn.highlight ? 'highlight' : '';
+                btnsHtml += `<button class="reply-chip ${highlightClass}" onclick="sendMessage('${btn.id}')">${btn.text}</button>`;
+            });
+            quickReplies.innerHTML = btnsHtml;
+        }
+
+        function sendMessage(topic) {
+            if (isReplying) return;
+
+            const chatBody = document.getElementById('chat-body');
+            const typingIndicator = document.getElementById('typing-indicator');
+            const quickReplies = document.getElementById('quick-replies');
+            
+            // Get text based on current lang
+            const userQ = chatData[currentLang].q[topic];
+            const aiA = chatData[currentLang].a[topic];
+
+            // Add User Message
+            const userBubble = document.createElement('div');
+            userBubble.className = 'message user';
+            userBubble.innerText = userQ;
+            chatBody.insertBefore(userBubble, typingIndicator);
+            scrollToBottom();
+
+            // Typing Effect
+            isReplying = true;
+            quickReplies.style.pointerEvents = "none"; 
+            quickReplies.style.opacity = "0.7";
+            
+            typingIndicator.style.display = 'flex'; 
+            scrollToBottom();
+
+            setTimeout(() => {
+                typingIndicator.style.display = 'none'; 
+                
+                const aiBubble = document.createElement('div');
+                aiBubble.className = 'message ai';
+                aiBubble.innerText = aiA;
+                
+                chatBody.appendChild(aiBubble);
+                scrollToBottom();
+
+                isReplying = false;
+                quickReplies.style.pointerEvents = "auto";
+                quickReplies.style.opacity = "1";
+            }, 1000); 
+        }
+
+        function scrollToBottom() {
+            const chatBody = document.getElementById('chat-body');
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        // Initialize Default (ID)
+        setLanguage('id');
+
+    </script>
+</body>
+</html>
